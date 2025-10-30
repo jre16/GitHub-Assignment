@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Inventory</title>
+</head>
+<body>
+    <h1>Video Inventory</h1>
+    <a href="{% url 'video_create' %}">Add New Video</a>
+    <ul>
+        {% for video in videos %}
+            <li>
+                <strong>Movie ID:</strong> {{ video.movie_id }}<br>
+                <a href="{% url 'video_detail' video.movie_id %}">{{ video.movie_title }}</a> - 
+                {{ video.release_year }} 
+                <a href="{% url 'video_update' video.movie_id %}">Edit</a> 
+                <a href="{% url 'video_delete' video.movie_id %}">Delete</a>
+            </li>
+        {% empty %}
+            <li>No videos available.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
