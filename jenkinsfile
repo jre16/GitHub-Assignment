@@ -29,13 +29,16 @@ pipeline {
         stage('Deploy to Minikube') {
             steps {
                 bat '''
-                    REM === Apply the updated deployment manifest ===
-                    kubectl apply -f deployment.yaml
+                REM Ensure minikube is up and bind kubecontext to THIS session
+                minikube status || minikube start --driver=docker --kubernetes-version=v1.34.0
+                minikube update-context
 
-                    REM === Ensure the rollout completes ===
-                    kubectl rollout status deployment/django-deployment
+                REM Use minikube's kubectl so we don't rely on stale localhost ports
+                minikube kubectl -- apply -f deployment.yaml --validate=false
+                minikube kubectl -- rollout status deployment/django-deployment --timeout=180s
                 '''
             }
         }
+
     }
 }
